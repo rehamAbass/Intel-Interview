@@ -1,0 +1,47 @@
+ 1 	 #include <stdio.h>
+ 2 	 #include <stdlib.h>
+ 3 	 #include <stdarg.h>
+ 4 	 #include <string.h>
+ 5 	 
+ 6 	 /* Note: this is a minimal printf implementation */
+ 7 	 /* This is for building understanding only */
+ 8 	 int print (char * str, ...)
+ 9 	 {
+ 10 	   va_list vl;
+ 11 	   int i = 0, j=0;
+ 12 	   char buff[100]={0}, tmp[20];
+ 13 	   va_start( vl, str );
+ 14 	 
+ 15 	   while (str && str[i])
+ 16 	   {
+ 17 	     if(str[i] == '%'){
+ 18 	       i++;
+ 19 	       switch (str[i]) {
+ 20 	         case 'c': {
+ 21 	           buff[j] = (char)va_arg( vl, int );
+ 22 	           j++;
+ 23 	           break;
+ 24 	         }
+ 25 	         case 'd': {
+ 26 	           itoa(va_arg( vl, int ), tmp, 10);
+ 27 	           strcpy(&buff[j], tmp);
+ 28 	           j += strlen(tmp);
+ 29 	           break;
+ 30 	         }
+ 31 	         case 'x': {
+ 32 	           itoa(va_arg( vl, int ), tmp, 16);
+ 33 	           strcpy(&buff[j], tmp);
+ 34 	           j += strlen(tmp);
+ 35 	           break;
+ 36 	         }
+ 37 	       }
+ 38 	     } else {
+ 39 	       buff[j] =str[i];
+ 40 	       j++;
+ 41 	     }
+ 42 	     i++;
+ 43 	   } 
+ 44 	   fwrite(buff, j, 1, stdout); 
+ 45 	   va_end(vl);
+ 46 	   return j;
+ 47 	 }

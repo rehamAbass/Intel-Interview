@@ -1,0 +1,66 @@
+/* Note: this is a minimal scanf implementation */
+ 2 	 /* This is for building understanding only */
+ 3 	 #include <stdio.h>
+ 4 	 #include <stdlib.h>
+ 5 	 #include<stdarg.h>
+ 6 	 
+ 7 	 int scan (char * str, ...)
+ 8 	 {
+ 9 	   va_list vl;
+ 10 	   int i = 0, j=0, ret = 0;
+ 11 	   char buff[100] = {0}, tmp[20], c;
+ 12 	   char *out_loc;
+ 13 	   while(c != '
+ 14 	 ') {
+ 15 	     if (fread(&c, 1, 1, stdin)) {
+ 16 	       buff[i] = c;
+ 17 	       i++;
+ 18 	     }
+ 19 	   }
+ 20 	   va_start( vl, str );
+ 21 	   i = 0;
+ 22 	   while (str && str[i])
+ 23 	   {
+ 24 	     if (str[i] == '%') {
+ 25 	       i++;
+ 26 	       switch (str[i]) {
+ 27 	         case 'c': {
+ 28 	           *(char *)va_arg( vl, char* ) = buff[j];
+ 29 	           j++;
+ 30 	           ret ++;
+ 31 	           break;
+ 32 	         }
+ 33 	         case 'd': {
+ 34 	           *(int *)va_arg( vl, int* ) =strtol(&buff[j], &out_loc, 10);
+ 35 	           j+=out_loc -&buff[j];
+ 36 	           ret++;
+ 37 	           break;
+ 38 	         }
+ 39 	         case 'x': {
+ 40 	           *(int *)va_arg( vl, int* ) =strtol(&buff[j], &out_loc, 16);
+ 41 	           j+=out_loc -&buff[j];
+ 42 	           ret++;
+ 43 	           break;
+ 44 	         }
+ 45 	       }
+ 46 	     } else {
+ 47 	       buff[j] =str[i];
+ 48 	       j++;
+ 49 	     }
+ 50 	     i++;
+ 51 	   }
+ 52 	   va_end(vl);
+ 53 	   return ret;
+ 54 	 
+ 55 	 }
+ 56 	 int main(int argc, char *argv[])
+ 57 	 
+ 58 	 {
+ 59 	   char c;
+ 60 	   int i;
+ 61 	   int h;
+ 62 	   int ret = 0;
+ 63 	   ret = scan("%c %d %x", &c, &i, &h);
+ 64 	   print("C = %c, I = %d, H = %X, Return %d", c, i, h, ret);
+ 65 	   return 0;
+ 66 	 }
